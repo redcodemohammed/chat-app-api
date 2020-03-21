@@ -145,19 +145,11 @@ router.patch("/", auth(), async (req, res) => {
             type: "error"
         })).end();
 
-        //validate password:
-        if(password.length > 0){
-          if (!validate.password(password)) return res.status(400).json(respond({
-              data: null,
-              message: "password is not valid",
-              type: "error"
-            })).end();
-        }
+
         //check if the value is undefined and delete it:
         let userInfo = { name, username, password };
         if (!name) delete userInfo.name;
         if (!username) delete userInfo.username;
-        if (!password) delete userInfo.password;
 
         let user = await User.findById(userId);
 
@@ -169,10 +161,6 @@ router.patch("/", auth(), async (req, res) => {
             type: "error"
         })).end();
 
-        //hash the password:
-        if (password) {
-            userInfo.password = hashSync(password, 10);
-        }
 
 
         for (const field in userInfo) {
@@ -182,7 +170,7 @@ router.patch("/", auth(), async (req, res) => {
             }
         }
         await user.save();
-        delete userInfo.password
+
         return res.status(202).json(respond({
             data: {
                 ...userInfo
@@ -222,9 +210,10 @@ router.get("/me", auth(), async (req, res) => {
         let userId = req["user"];
 
         let user = await User.findById(userId);
+
         return res.status(200).json(respond({
             type: "success",
-            data: { user },
+            data: { username: user["username"], name: ["name"] },
             message: ""
         })).end();
     } catch (err) {
