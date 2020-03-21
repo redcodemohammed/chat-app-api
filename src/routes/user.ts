@@ -213,7 +213,7 @@ router.get("/me", auth(), async (req, res) => {
 
         return res.status(200).json(respond({
             type: "success",
-            data: { username: user["username"], name: ["name"] },
+            data: { user: { username: user["username"], name: user["name"] } },
             message: ""
         })).end();
     } catch (err) {
