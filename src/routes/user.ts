@@ -129,7 +129,7 @@ router.post("/login", async (req, res) => {
 router.patch("/", auth(), async (req, res) => {
     try {
         let userId = req["user"];
-        let { name, username, password, oldPassword } = req.body;
+        let { name, username, oldPassword } = req.body;
 
         //validate name:
         if (name && !validate.name(name)) return res.status(400).json(respond({
@@ -147,7 +147,7 @@ router.patch("/", auth(), async (req, res) => {
 
 
         //check if the value is undefined and delete it:
-        let userInfo = { name, username, password };
+        let userInfo = { name, username };
         if (!name) delete userInfo.name;
         if (!username) delete userInfo.username;
 
@@ -160,8 +160,6 @@ router.patch("/", auth(), async (req, res) => {
             message: "password is wrong",
             type: "error"
         })).end();
-
-
 
         for (const field in userInfo) {
             if (userInfo.hasOwnProperty(field)) {
@@ -180,7 +178,6 @@ router.patch("/", auth(), async (req, res) => {
         })).end();
 
     } catch (err) {
-        console.log(err);
         res.status(500).json(respond({
             data: null,
             message: "internal server error",
