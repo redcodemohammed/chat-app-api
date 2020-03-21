@@ -180,6 +180,7 @@ router.patch("/", auth(), async (req, res) => {
         })).end();
 
     } catch (err) {
+        console.log(err);
         res.status(500).json(respond({
             data: null,
             message: "internal server error",
